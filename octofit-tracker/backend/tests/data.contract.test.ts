@@ -35,6 +35,19 @@ describe('OctoFit data contract', () => {
     expect(error?.errors.points).toBeDefined();
     expect(error?.errors.occurredAt).toBeDefined();
   });
+  it('rejects activity durations below one minute and negative points', () => {
+    const activity = new Activity({
+      user: new mongoose.Types.ObjectId(),
+      team: new mongoose.Types.ObjectId(),
+      type: 'run',
+      minutes: 0,
+      points: -1,
+      occurredAt: new Date(),
+    });
+    const error = activity.validateSync();
+    expect(error?.errors.minutes).toBeDefined();
+    expect(error?.errors.points).toBeDefined();
+  });
   it('defines workout suggestions with focus, duration, and difficulty', () => {
     const workout = new Workout({ title: 'Intervals' });
     const error = workout.validateSync();
